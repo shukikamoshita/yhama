@@ -4,421 +4,161 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YAmaDA Books - 感情で選ぶ本屋さん</title>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* ---------------- 共通リセット ---------------- */
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{
+            font-family:'Hiragino Sans','Yu Gothic','Meiryo',sans-serif;
+            line-height:1.6;
+            overflow-x:hidden;
+            background:linear-gradient(135deg,#ff9a9e 0%,#fecfef 50%,#fecfef 100%);
         }
 
-        body {
-            font-family: 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        /* ---------------- ヘッダー ---------------- */
+        .header{
+            position:fixed;top:0;width:100%;
+            background:rgba(255,255,255,.95);
+            backdrop-filter:blur(10px);
+            z-index:1000;
+            padding:1rem 0;
+            box-shadow:0 2px 20px rgba(0,0,0,.1);
+        }
+        .nav{
+            display:flex;justify-content:space-between;align-items:center;
+            max-width:1200px;margin:0 auto;padding:0 2rem;
+        }
+        .logo{
+            font-size:1.8rem;font-weight:bold;color:#ff6b6b;
+            animation:bounce 2s infinite;
+        }
+        @keyframes bounce{
+            0%,20%,50%,80%,100%{transform:translateY(0)}
+            40%{transform:translateY(-10px)}
+            60%{transform:translateY(-5px)}
+        }
+        .nav-links{display:flex;list-style:none;gap:2rem;}
+        .nav-links a{text-decoration:none;color:#333;font-weight:500;transition:.3s}
+        .nav-links a:hover{color:#ff6b6b;}
+
+        /* ---------------- メイン ---------------- */
+        .main-content{margin-top:80px;}
+
+        /* ========= ヒーローセクション ========= */
+        .hero{
+            height:100vh;
+            background:url('images/hero.jpg') center/cover no-repeat; /* ← 画像を配置するパス */
+            position:relative;display:flex;align-items:center;justify-content:center;
+            text-align:center;
+        }
+        /* 暗めオーバーレイ */
+        .hero::before{
+            content:'';position:absolute;inset:0;
+            background:rgba(0,0,0,.45);z-index:1;pointer-events:none;
+        }
+        .hero-content{
+            position:relative;z-index:2;max-width:800px;color:#fff;
+        }
+        .hero h1{
+            font-size:3.5rem;margin-bottom:1rem;
+            text-shadow:2px 2px 4px rgba(0,0,0,.3);
+            animation:slideInUp 1s ease-out;
+        }
+        .hero p{
+            font-size:1.3rem;margin-bottom:2rem;
+            text-shadow:1px 1px 2px rgba(0,0,0,.3);
+            animation:slideInUp 1s ease-out .3s both;
+        }
+        @keyframes slideInUp{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:translateY(0)}}
+        .cta-button{
+            display:inline-block;padding:1rem 2.5rem;
+            background:linear-gradient(45deg,#ff6b6b,#4ecdc4);
+            color:#fff;text-decoration:none;border-radius:50px;
+            font-size:1.2rem;font-weight:bold;transition:.3s;
+            box-shadow:0 5px 15px rgba(0,0,0,.2);
+            animation:slideInUp 1s ease-out .6s both;
+        }
+        .cta-button:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(0,0,0,.3);}
+
+        /* ---------------- コンセプト ---------------- */
+        .concept{padding:5rem 2rem;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;}
+        .container{max-width:1200px;margin:0 auto;}
+        .section-title{
+            text-align:center;font-size:2.5rem;margin-bottom:3rem;position:relative;
+        }
+        .section-title::after{
+            content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
+            width:80px;height:4px;background:linear-gradient(45deg,#ff6b6b,#4ecdc4);border-radius:2px;
+        }
+        .concept-grid{
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-top:3rem;
+        }
+        .concept-card{
+            background:rgba(255,255,255,.1);backdrop-filter:blur(10px);
+            padding:2rem;border-radius:20px;text-align:center;transition:.3s;border:1px solid rgba(255,255,255,.2);
+        }
+        .concept-card:hover{transform:translateY(-10px);}
+        .concept-icon{font-size:3rem;margin-bottom:1rem;animation:pulse 2s infinite;}
+        @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+
+        /* ---------------- 感情本棚 ---------------- */
+        .emotion-shelves{padding:5rem 2rem;background:linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%);}
+        .shelves-grid{
+            display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin-top:3rem;
+        }
+        @media (max-width:768px){.shelves-grid{grid-template-columns:repeat(2,1fr)}}
+        @media (max-width:480px){.shelves-grid{grid-template-columns:1fr}}
+        .shelf-card{
+            background:#fff;border-radius:20px;padding:2rem;text-align:center;
+            box-shadow:0 10px 30px rgba(0,0,0,.1);transition:.3s;position:relative;overflow:hidden;
+            cursor:pointer;text-decoration:none;color:inherit;display:block;
+        }
+        .shelf-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:var(--accent-color);}
+        .shelf-card:hover{transform:translateY(-10px) scale(1.02);box-shadow:0 20px 40px rgba(0,0,0,.15);}
+        .shelf-emotion{font-size:3rem;margin-bottom:1rem;}
+        .shelf-title{font-size:1.5rem;color:#333;margin-bottom:1rem;}
+        .shelf-description{color:#666;font-size:.9rem;}
+
+        /* ---------------- 特徴 ---------------- */
+        .features{padding:5rem 2rem;background:linear-gradient(135deg,#a8edea 0%,#fed6e3 100%);}
+        .features-grid{
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:3rem;margin-top:3rem;
+        }
+        .feature-card{
+            background:#fff;border-radius:20px;padding:2.5rem;
+            box-shadow:0 15px 35px rgba(0,0,0,.1);transition:.3s;
+        }
+        .feature-card:hover{transform:translateY(-5px);}
+        .feature-icon{font-size:2.5rem;margin-bottom:1rem;display:block;}
+        .feature-title{font-size:1.4rem;color:#333;margin-bottom:1rem;}
+
+        /* ---------------- 最終CTA ---------------- */
+        .final-cta{
+            padding:5rem 2rem;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+            text-align:center;color:#fff;
+        }
+        .final-cta h2{font-size:2.5rem;margin-bottom:1rem;}
+        .final-cta p{font-size:1.2rem;margin-bottom:2rem;opacity:.9;}
+
+        /* ---------------- フッター ---------------- */
+        .footer{background:#333;color:#fff;text-align:center;padding:2rem;}
+
+        /* ---------------- レスポンシブ ---------------- */
+        @media (max-width:768px){
+            .hero h1{font-size:2.5rem;}
+            .hero p{font-size:1.1rem;}
+            .nav-links{display:none;}
+            .concept-grid,.features-grid{grid-template-columns:1fr;}
         }
 
-        /* ヘッダー */
-        .header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 1rem 0;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-        }
-
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #ff6b6b;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #ff6b6b;
-        }
-
-        /* メインコンテンツ */
-        .main-content {
-            margin-top: 80px;
-        }
-
-        /* ヒーローセクション */
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .floating-books {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .book {
-            position: absolute;
-            width: 60px;
-            height: 80px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
-            border-radius: 5px;
-            animation: float 6s ease-in-out infinite;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .book::before {
-            content: '';
-            position: absolute;
-            left: 5px;
-            top: 10px;
-            bottom: 10px;
-            width: 3px;
-            background: rgba(255,255,255,0.3);
-        }
-
-        .book:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
-        .book:nth-child(2) { left: 85%; top: 60%; animation-delay: 1s; }
-        .book:nth-child(3) { left: 70%; top: 15%; animation-delay: 2s; }
-        .book:nth-child(4) { left: 15%; top: 70%; animation-delay: 3s; }
-        .book:nth-child(5) { left: 50%; top: 80%; animation-delay: 4s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            33% { transform: translateY(-20px) rotate(5deg); }
-            66% { transform: translateY(10px) rotate(-3deg); }
-        }
-
-        .hero-content {
-            max-width: 800px;
-            z-index: 10;
-            position: relative;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            color: #fff;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            animation: slideInUp 1s ease-out;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            color: #fff;
-            margin-bottom: 2rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-            animation: slideInUp 1s ease-out 0.3s both;
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            animation: slideInUp 1s ease-out 0.6s both;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        }
-
-        /* コンセプトセクション */
-        .concept {
-            padding: 5rem 2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            border-radius: 2px;
-        }
-
-        .concept-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .concept-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 20px;
-            text-align: center;
-            transition: transform 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .concept-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .concept-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        /* 感情本棚セクション */
-        .emotion-shelves {
-            padding: 5rem 2rem;
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-        }
-
-        .shelves-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        @media (max-width: 768px) {
-            .shelves-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .shelves-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .shelf-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-
-        .shelf-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: var(--accent-color);
-        }
-
-        .shelf-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-
-        .shelf-emotion {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .shelf-title {
-            font-size: 1.5rem;
-            color: #333;
-            margin-bottom: 1rem;
-        }
-
-        .shelf-description {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        /* 特徴セクション */
-        .features {
-            padding: 5rem 2rem;
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .feature-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .feature-title {
-            font-size: 1.4rem;
-            color: #333;
-            margin-bottom: 1rem;
-        }
-
-        /* CTA セクション */
-        .final-cta {
-            padding: 5rem 2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            text-align: center;
-            color: white;
-        }
-
-        .final-cta h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .final-cta p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        /* フッター */
-        .footer {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        /* レスポンシブデザイン */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero p {
-                font-size: 1.1rem;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .concept-grid,
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .shelves-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .shelves-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* スクロールアニメーション */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        /* ---------------- スクロールフェード ---------------- */
+        .fade-in{opacity:0;transform:translateY(30px);transition:.6s;}
+        .fade-in.visible{opacity:1;transform:translateY(0);}
     </style>
 </head>
+
 <body>
-    <!-- ヘッダー -->
+    <!-- ===== ヘッダー ===== -->
     <header class="header">
         <nav class="nav">
             <div class="logo">📚 YAmaDA Books</div>
@@ -431,16 +171,10 @@
         </nav>
     </header>
 
+    <!-- ===== メイン ===== -->
     <main class="main-content">
-        <!-- ヒーローセクション -->
+        <!-- ヒーロー -->
         <section class="hero">
-            <div class="floating-books">
-                <div class="book"></div>
-                <div class="book"></div>
-                <div class="book"></div>
-                <div class="book"></div>
-                <div class="book"></div>
-            </div>
             <div class="hero-content">
                 <h1>感情で選ぶ、新しい本屋体験</h1>
                 <p>その時の気持ちに寄り添う本と出会える場所。<br>偶然の発見が、あなたの人生を豊かにします。</p>
@@ -448,7 +182,7 @@
             </div>
         </section>
 
-        <!-- コンセプトセクション -->
+        <!-- コンセプト -->
         <section id="concept" class="concept">
             <div class="container">
                 <h2 class="section-title fade-in">山田書店のコンセプト</h2>
@@ -466,154 +200,128 @@
                     <div class="concept-card fade-in">
                         <div class="concept-icon">🎯</div>
                         <h3>直感的な選択</h3>
-                        <p>今の気分で本を選ぶ新しい体験。心の状態に合わせて、自然と手に取りたくなる本が見つかります。</p>
+                        <p>今の気分で本を選ぶ全く新しい体験。自然と手に取りたくなる本が見つかります。</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 感情本棚セクション -->
+        <!-- 感情本棚 -->
         <section id="shelves" class="emotion-shelves">
             <div class="container">
                 <h2 class="section-title fade-in">感情別本棚</h2>
                 <div class="shelves-grid">
-                    <a href="https://yamada-bookstore.com/happy" class="shelf-card fade-in" style="--accent-color: #ff6b6b;">
+                    <!-- 8つの棚カード -->
+                    <a href="#" class="shelf-card fade-in" style="--accent-color:#ff6b6b;">
                         <div class="shelf-emotion">😊</div>
                         <h3 class="shelf-title">幸せな時の本棚</h3>
-                        <p class="shelf-description">今の幸せを更に深めたり、喜びを分かち合える本たちが並んでいます</p>
+                        <p class="shelf-description">今の幸せをさらに深め、喜びを分かち合える本が並びます。</p>
                     </a>
-                    <a href="https://yamada-bookstore.com/sad" class="shelf-card fade-in" style="--accent-color: #4ecdc4;">
+                    <a href="#" class="shelf-card fade-in" style="--accent-color:#4ecdc4;">
                         <div class="shelf-emotion">😢</div>
                         <h3 class="shelf-title">悲しい時の本棚</h3>
-                        <p class="shelf-description">心を癒やし、そっと寄り添ってくれる優しい本たちが待っています</p>
+                        <p class="shelf-description">心を癒やし、そっと寄り添ってくれる優しい本たち。</p>
                     </a>
-                    <a href="https://yamada-bookstore.com/angry" class="shelf-card fade-in" style="--accent-color: #45b7d1;">
+                    <a href="#" class="shelf-card fade-in" style="--accent-color:#45b7d1;">
                         <div class="shelf-emotion">😠</div>
                         <h3 class="shelf-title">怒っている時の本棚</h3>
-                        <p class="shelf-description">怒りを理解し、エネルギーを前向きに変える本たちがあります</p>
+                        <p class="shelf-description">怒りを理解し、エネルギーを前向きに変える本があります。</p>
                     </a>
-                    <a href="https://yamada-bookstore.com/anxious" class="shelf-card fade-in" style="--accent-color: #96ceb4;">
+                    <a href="#" class="shelf-card fade-in" style="--accent-color:#96ceb4;">
                         <div class="shelf-emotion">😰</div>
                         <h3 class="shelf-title">不安な時の本棚</h3>
-                        <p class="shelf-description">心を落ち着かせ、不安を和らげる本たちが並んでいます</p>
+                        <p class="shelf-description">心を落ち着かせ、不安を和らげる本たちが並んでいます。</p>
                     </a>
-                    <a href="https://yamada-bookstore.com/thinking" class="shelf-card fade-in" style="--accent-color: #ffeaa7;">
+                    <a href="#" class="shelf-card fade-in" style="--accent-color:#ffeaa7;">
                         <div class="shelf-emotion">🤔</div>
                         <h3 class="shelf-title">考え込む時の本棚</h3>
-                        <p class="shelf-description">思考を整理し、新しい視点をくれる本たちがあります</p>
+                        <p class="shelf-description">思考を整理し、新しい視点をくれる本があります。</p>
                     </a>
-                    <a href="https://yamada-bookstore.com/love" class="shelf-card fade-in" style="--accent-color: #fd79a8;">
+                    <a href="#" class="shelf-card fade-in" style="--accent-color:#fd79a8;">
                         <div class="shelf-emotion">💕</div>
                         <h3 class="shelf-title">恋をしている時の本棚</h3>
-                        <p class="shelf-description">恋心を理解し、愛を深める本たちが心躍らせます</p>
+                        <p class="shelf-description">恋心を理解し、愛を深める本が心を躍らせます。</p>
                     </a>
-                    <a href="https://yamada-bookstore.com/excited" class="shelf-card fade-in" style="--accent-color: #ff9f43;">
+                    <a href="#" class="shelf-card fade-in" style="--accent-color:#ff9f43;">
                         <div class="shelf-emotion">🤩</div>
                         <h3 class="shelf-title">ワクワクしている時の本棚</h3>
-                        <p class="shelf-description">冒険心をくすぐり、新しい発見へと導く本たちが並んでいます</p>
+                        <p class="shelf-description">冒険心をくすぐり、新しい発見へ導く本が並びます。</p>
                     </a>
-                    <a href="https://yamada-bookstore.com/peaceful" class="shelf-card fade-in" style="--accent-color: #6c5ce7;">
+                    <a href="#" class="shelf-card fade-in" style="--accent-color:#6c5ce7;">
                         <div class="shelf-emotion">😌</div>
                         <h3 class="shelf-title">穏やかな時の本棚</h3>
-                        <p class="shelf-description">静寂の中で心を豊かにし、深い思索に誘う本たちがあります</p>
+                        <p class="shelf-description">静寂の中で心を豊かにし、深い思索に誘う本があります。</p>
                     </a>
                 </div>
             </div>
         </section>
 
-        <!-- 特徴セクション -->
+        <!-- 特徴 -->
         <section id="features" class="features">
             <div class="container">
                 <h2 class="section-title fade-in">山田書店の特徴</h2>
                 <div class="features-grid">
                     <div class="feature-card fade-in">
                         <span class="feature-icon">🎨</span>
-                        <h3 class="feature-title">感情に基づく独自の分類</h3>
-                        <p>従来のジャンル分けを超えて、人の感情に寄り添った全く新しい本の分類システムを採用しています。</p>
+                        <h3 class="feature-title">感情に基づく独自分類</h3>
+                        <p>ジャンルを超え、心に寄り添ったまったく新しい分類システム。</p>
                     </div>
                     <div class="feature-card fade-in">
                         <span class="feature-icon">🔍</span>
                         <h3 class="feature-title">セレンディピティの創出</h3>
-                        <p>AIによる推薦では得られない、人間らしい偶然の発見を大切にした本との出会いを提供します。</p>
+                        <p>AIレコメンドでは得られない、人間らしい偶然の出会いを提案。</p>
                     </div>
                     <div class="feature-card fade-in">
                         <span class="feature-icon">💡</span>
                         <h3 class="feature-title">直感的な本選び</h3>
-                        <p>複雑な検索や絞り込みではなく、今の気持ちという直感的な方法で本を選ぶことができます。</p>
+                        <p>複雑な検索より、今の気持ちという直感で本を選ぶ体験を提供。</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 最終CTA -->
+        <!-- 最終 CTA -->
         <section class="final-cta">
             <div class="container">
                 <h2 class="fade-in">あなたの感情に寄り添う本を見つけませんか？</h2>
-                <p class="fade-in">山田書店で、新しい本との出会いを体験してください</p>
-                <a href="https://www.honyaclub.com/shop/store/detail.aspx?shop_id=157240&mode=&s_guid=&code=" class="cta-button fade-in">今すぐ本を探す</a>
+                <p class="fade-in">山田書店で、新しい本との出会いを体験してください。</p>
+                <a href="#" class="cta-button fade-in">今すぐ本を探す</a>
             </div>
         </section>
     </main>
 
-    <!-- フッター -->
+    <!-- ===== フッター ===== -->
     <footer class="footer">
         <div class="container">
             <p>&copy; 2024 山田書店. All rights reserved.</p>
         </div>
     </footer>
 
+    <!-- ===== JS ===== -->
     <script>
-        // スクロールアニメーション
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
+        /* スクロールフェードイン */
+        const observer = new IntersectionObserver(entries=>{
+            entries.forEach(entry=>{
+                if(entry.isIntersecting){entry.target.classList.add('visible');}
             });
-        }, observerOptions);
-
-        // 全ての fade-in 要素を監視
-        document.addEventListener('DOMContentLoaded', () => {
-            const fadeElements = document.querySelectorAll('.fade-in');
-            fadeElements.forEach(el => observer.observe(el));
+        },{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+        document.addEventListener('DOMContentLoaded',()=>{
+            document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
         });
 
-        // スムーススクロール
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+        /* スムーススクロール */
+        document.querySelectorAll('a[href^="#"]').forEach(anchor=>{
+            anchor.addEventListener('click',e=>{
+                const target=document.querySelector(anchor.getAttribute('href'));
+                if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});}
             });
         });
 
-        // 動的な本の色変更
-        const books = document.querySelectorAll('.book');
-        const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#fd79a8', '#ff9f43', '#6c5ce7'];
-        
-        setInterval(() => {
-            books.forEach(book => {
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                book.style.background = `linear-gradient(45deg, ${randomColor}, ${colors[Math.floor(Math.random() * colors.length)]})`;
-            });
-        }, 3000);
-
-        // ヘッダーの背景透明度調整
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('.header');
-            const scrolled = window.pageYOffset;
-            const opacity = Math.min(scrolled / 100, 0.95);
-            header.style.background = `rgba(255, 255, 255, ${opacity})`;
+        /* ヘッダーの透明度調整 */
+        window.addEventListener('scroll',()=>{
+            const header=document.querySelector('.header');
+            const opacity=Math.min(window.pageYOffset/100,.95);
+            header.style.background=`rgba(255,255,255,${opacity})`;
         });
     </script>
 </body>
